@@ -394,6 +394,69 @@
       </div>
     </div>
   </section>
+  <section class="relative pb-24 bg-white">
+    <div
+        class="bottom-auto top-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden -mt-20"
+        style="height: 80px;"
+    >
+      <svg
+          class="absolute bottom-0 overflow-hidden"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+          version="1.1"
+          viewBox="0 0 2560 100"
+          x="0"
+          y="0"
+      >
+        <polygon
+            class="text-white fill-current"
+            points="2560 0 2560 100 0 100"
+        ></polygon>
+      </svg>
+    </div>
+    <div class="container mx-auto px-4 pt-12">
+      <div class="flex flex-wrap justify-center text-center mb-8">
+        <div class="w-full lg:w-6/12 mb-6 pt-12">
+          <h3 class="text-3xl font-semibold">Nos réalisations</h3>
+          <p class="">Cliquez sur les images pour les agrandir.</p>
+          <div class="grid grid-cols-2 gap-4 md:grid-cols-4 py-12">
+            <div class="grid gap-4">
+              <div>
+                <img
+                  class="h-auto max-w-full rounded-lg object-cover object-center"
+                  src="./images/thermocustom_1.jpg"
+                  alt="gallery-photo"
+                />
+              </div>
+              <div>
+                <img
+                  class="h-auto max-w-full rounded-lg object-cover object-center"
+                  src="./images/thermocustom_3.jpg"
+                  alt="gallery-photo"
+                />
+              </div>
+            </div>
+            <div class="grid gap-4">
+              <div>
+                <img
+                  class="h-auto max-w-full rounded-lg object-cover object-center"
+                  src="./images/thermocustom_2_resize.jpg"
+                  alt="gallery-photo"
+                />
+              </div>
+              <div>
+                <img
+                  class="h-auto max-w-full rounded-lg object-cover object-center"
+                  src="./images/thermocustom_4.jpg"
+                  alt="gallery-photo"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
   <section class="pb-20 relative block bg-indigo-950">
     <div
         class="bottom-auto top-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden -mt-20"
@@ -475,6 +538,16 @@
                   placeholder="Entrez votre message..."
               ></textarea>
               </div>
+              <div class="relative w-full mb-3">
+                <label class="block uppercase text-gray-700 text-xs font-bold mb-2" for="images">Ajouter une image</label>
+                <input
+                  type="file"
+                  id="images"
+                  class="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
+                  placeholder="Sélectionnez une ou plusieurs images"
+                  multiple
+                />
+              </div>
               <div class="w-full flex flex-wrap justify-between items-end">
                 <div class="w-full lg:w-6/12 g-recaptcha" data-sitekey="6LcMtsMpAAAAACS52l5Cz2h7sS7donM0zVLIpgug"></div>
                 <div class="w-full lg:w-6/12 text-center mt-6">
@@ -547,7 +620,7 @@
     >
       <div class="w-full md:w-4/12 px-4 mx-auto text-center">
         <div class="text-sm text-gray-600 font-semibold py-1">
-          Template copyright © 2019 Tailwind Starter Kit by
+          Template copyright © 2024 Tailwind Starter Kit by
           <a
               href="https://www.creative-tim.com"
               class="text-gray-600 hover:text-gray-900"
@@ -572,11 +645,31 @@
     </div>
   </div>
 </footer>
+<div id="modal" class="hidden fixed top-0 left-0 z-80 w-screen h-screen bg-black/70 flex justify-center items-center">
+        <a class="fixed z-90 top-16 right-8 text-white text-5xl font-bold" href="javascript:void(0)" onclick="closeModal()">×</a>
+        <img id="modal-img" class="max-w-[800px] max-h-[600px] object-cover"/>
+</div>
 </body>
 <script>
     function toggleNavbar(collapseID) {
         document.getElementById(collapseID).classList.toggle("hidden");
         document.getElementById(collapseID).classList.toggle("block");
+    }
+
+    var images = document.querySelectorAll('.grid img');
+    images.forEach((img) => {
+      img.addEventListener('click', (event) => {
+        showModal(img.src);
+      });
+    });
+    var modal = document.getElementById('modal');
+    var modalImg = document.getElementById('modal-img');
+    function showModal(src) {
+      modal.classList.remove('hidden');
+      modalImg.src = src;
+    }
+    function closeModal() {
+      modal.classList.add('hidden');
     }
 </script>
 </html>
