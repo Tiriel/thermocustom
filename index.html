@@ -21,6 +21,7 @@
   <title>Thermo Custom</title>
   <script src="https://kit.fontawesome.com/9b6b53bce6.js" crossorigin="anonymous"></script>
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" async defer></script>
 </head>
 <body class="text-gray-800 antialiased">
 <nav
@@ -424,55 +425,7 @@
             </div>
           <h3 class="text-3xl font-semibold">Nos réalisations</h3>
           <p class="">Cliquez sur les images pour les agrandir.</p>
-          <div class="grid grid-cols-2 gap-4 md:grid-cols-4 py-12">
-            <div class="grid gap-4">
-              <div>
-                <img
-                  class="h-auto max-w-full rounded-lg object-cover object-center"
-                  src="./images/thermocustom_1.jpg"
-                  alt="gallery-photo"
-                />
-              </div>
-              <div>
-                <img
-                  class="h-auto max-w-full rounded-lg object-cover object-center"
-                  src="./images/thermocustom_3.jpg"
-                  alt="gallery-photo"
-                />
-              </div>
-            </div>
-            <div class="grid gap-4">
-              <div>
-                <img
-                  class="h-auto max-w-full rounded-lg object-cover object-center"
-                  src="./images/thermocustom_2_resize.jpg"
-                  alt="gallery-photo"
-                />
-              </div>
-              <div>
-                <img
-                  class="h-auto max-w-full rounded-lg object-cover object-center"
-                  src="./images/thermocustom_4.jpg"
-                  alt="gallery-photo"
-                />
-              </div>
-            </div>
-            <div class="grid gap-4">
-              <div>
-                <img
-                  class="h-auto max-w-full rounded-lg object-cover object-center"
-                  src="./images/thermocustom_5.jpg"
-                  alt="gallery-photo"
-                />
-              </div>
-<!--               <div>
-                <img
-                  class="h-auto max-w-full rounded-lg object-cover object-center"
-                  src="./images/thermocustom_4.jpg"
-                  alt="gallery-photo"
-                />
-              </div> -->
-            </div>
+          <div class="grid grid-cols-2 gap-4 md:grid-cols-4 py-12" id="gallery">
           </div>
         </div>
       </div>
@@ -667,30 +620,65 @@
   </div>
 </footer>
 <div id="modal" class="hidden fixed top-0 left-0 z-80 w-screen h-screen bg-black/70 flex justify-center items-center">
-        <a class="fixed z-90 top-16 right-8 text-white text-5xl font-bold" href="javascript:void(0)" onclick="closeModal()">×</a>
+        <a class="fixed z-90 top-16 right-8 text-white text-5xl font-bold" href="javascript:void(0)">×</a>
         <img id="modal-img" class="max-w-[800px] max-h-[600px] object-cover"/>
 </div>
 </body>
-<script>
-    function toggleNavbar(collapseID) {
+<script type="module">
+    window.onload = function () {
+      let modal = document.getElementById('modal');
+      let modalImg = document.getElementById('modal-img');
+
+      axios.get('https://thermocustom-api.ew.r.appspot.com/api/images')
+        .then((res) => {
+          const images = res.data['hydra:member'];
+          let gallery = document.getElementById('gallery');
+          let perCol = Math.ceil(images.length / 4);
+
+          for (let i = 0; i < 4; i++) {
+            let col = document.createElement('div');
+            col.classList.add('grid', 'gap-4', 'gallery-col');
+            gallery.appendChild(col);
+          }
+          const cols = document.querySelectorAll('.gallery-col');
+          let colIndex = 0, colCount = 0;
+
+          images.forEach(i => {
+            let img = document.createElement('img');
+            img.classList.add('h-auto', 'max-w-full', 'rounded-lg', 'object-cover', 'object-center');
+            img.src = i.path;
+            img.alt = i.name;
+
+            let div = document.createElement('div');
+            div.appendChild(img);
+            img.addEventListener('click', (event) => {
+              showModal(img.src);
+            });
+            cols[colIndex].appendChild(div);
+            colCount++;
+
+            if (colCount >= perCol) {
+              colIndex++;
+              colCount = 0;
+            }
+          });
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+      function toggleNavbar(collapseID) {
         document.getElementById(collapseID).classList.toggle("hidden");
         document.getElementById(collapseID).classList.toggle("block");
+      }
+
+      function showModal(src) {
+        modal.classList.remove('hidden');
+        modalImg.src = src;
+      }
     }
 
-    var images = document.querySelectorAll('.grid img');
-    images.forEach((img) => {
-      img.addEventListener('click', (event) => {
-        showModal(img.src);
-      });
-    });
-    var modal = document.getElementById('modal');
-    var modalImg = document.getElementById('modal-img');
-    function showModal(src) {
-      modal.classList.remove('hidden');
-      modalImg.src = src;
-    }
-    function closeModal() {
+    document.querySelector('#modal a').addEventListener('click', (e) => {
       modal.classList.add('hidden');
-    }
+    });
 </script>
 </html>
